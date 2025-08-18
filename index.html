@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/>
+<title>Token-System</title>
+<style>
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  15% { transform: rotate(-15deg); }
+  30% { transform: rotate(10deg); }
+  45% { transform: rotate(-10deg); }
+  60% { transform: rotate(6deg); }
+  75% { transform: rotate(-4deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.wiggle-once {
+  display: inline-block;
+  animation: wiggle 1.5s ease-in-out 2;
+}
+
+@keyframes wiggle {
+  0% { transform: rotate(0deg); }
+  15% { transform: rotate(-15deg); }
+  30% { transform: rotate(10deg); }
+  45% { transform: rotate(-10deg); }
+  60% { transform: rotate(6deg); }
+  75% { transform: rotate(-4deg); }
+  100% { transform: rotate(0deg); }
+}
+
+
+
+
+#color-chooser-teacher {
+  display: none !important;
+}
+
+
+#color-chooser-student button,
+#color-chooser-teacher button {
+  font-size: 20px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transition: all 0.2s ease-in-out;
+}
+#color-chooser-student button:hover,
+#color-chooser-teacher button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  background: #f0f0f0;
+}
+
+
+.bg-light { background-color: #f0f0f0; color: black; }
+.bg-dark  { background-color: #222; color: white; }
+.bg-green { background-color: #e8f5e9; color: black; }
+.bg-blue  { background-color: #e3f2fd; color: black; }
+
+
+.student-button {
+  background: linear-gradient(to bottom, #66bb44, #2e7d32);
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  padding: 15px 30px;
+  font-size: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.5);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+  transition: all 0.2s ease-in-out;
+}
+
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    background: #f0f0f0;
+    padding: 30px;
+  }
+  h1 {
+    margin-bottom: 30px;
+  }
+  .button {
+    padding: 15px 30px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: #4CAF50;
+    color: white;
+    margin: 10px;
+    cursor: pointer;
+  }
+  .button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .blue-button {
+    background-color: #1976d2;
+  }
+  #name-popup {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 60px;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px 40px;
+    border-radius: 15px;
+    display: none;
+    z-index: 10000;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  }
+  .star-container {
+    display: grid;
+    grid-template-columns: repeat(5, auto);
+    justify-content: start;
+    gap: 15px;
+    font-size: 80px;
+    margin: 20px 0;
+  }
+  .star {
+    color: gold;
+  }
+  .star.filled {
+    color: gold;
+  }
+  #student-screen {
+    text-align: left;
+    padding-left: 40px;
+  }
+
+#student-screen h1 {
+  margin-bottom: 20px;
+}
+
+#points-count {
+  font-weight: bold;
+}
+
+#points-as-stars {
+  font-size: 24px;
+  margin: 10px 0 30px;
+  font-weight: bold;
+  background: linear-gradient(90deg, #ffcc00, #ffd700, #ffcc00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 5px rgba(255,215,0,0.8), 1px 1px 2px #b8860b;
+}
+
+#student-reward-hint {
+  margin-top: 40px;
+}
+
+#student-reward-hint h3 {
+  margin-bottom: 12px;
+  font-size: 22px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 6px;
+}
+
+#student-reward-hint > div {
+  margin-bottom: 14px;
+}
+
+#student-reward-hint 
+
+#student-reward-hint .next-goal {
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+
+.reward-button:hover {
+  background: #d6f0d6;
+}
+
+  
+
+#daily-view-section table {
+  border-collapse: collapse;
+  margin: auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: max-content;
+  max-width: 95%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+#daily-view-section th, #daily-view-section td {
+  padding: 10px 14px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+#daily-view-section thead th {
+  background: black;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+#daily-view-section tr:hover {
+  background-color: #f1f1f1;
+}
+
+#daily-view-section td:last-child {
+  font-weight: bold;
+  background: #f9f9f9;
+}
+
+#belohnungstabelle-section table {
+  border-collapse: collapse;
+  margin: auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  width: max-content;
+  max-width: 95%;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+#belohnungstabelle-section th, #belohnungstabelle-section td {
+  padding: 10px 14px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+#belohnungstabelle-section thead th {
+  background: black;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+#belohnungstabelle-section tr:hover {
+  background-color: #f1f1f1;
+}
+
+
+
+.teacher-button {
+  background: #ffcc00;
+  color: black;
+  font-weight: bold;
+  border: 2px solid #e6b800;
+  border-radius: 12px;
+  padding: 15px 30px;
+  font-size: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.5);
+  text-shadow: 0 1px 0 rgba(255,255,255,0.6);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+.teacher-button:hover {
+  background: #ffdb4d;
+  transform: translateY(-1px);
+}
+.button:active,
+.student-button:active,
+.teacher-button:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Hintergrundfarbwahl */
+
+
+
+
+
+#color-chooser {
+  margin: 20px 0;
+  text-align: center;
+}
+#color-chooser button {
+  font-size: 24px;
+  margin: 0 5px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+
+@media (max-width: 768px) {
+  .student-button, .teacher-button, .button {
+    font-size: 16px;
+    padding: 12px 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  #student-buttons, #teacher-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 10px;
+  }
+
+  #student-screen, #teacher-screen {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .star-container {
+    grid-template-columns: repeat(4, auto);
+    font-size: 60px;
+    gap: 10px;
+  }
+
+  #student-reward-hint {
+    font-size: 18px;
+  }
+
+  #points-as-stars {
+    font-size: 30px;
+  }
+
+  table {
+    font-size: 12px;
+    overflow-x: auto;
+  }
+}
+
+</style>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js">
+function startKlassenparty() {
+  students.forEach(name => {
+    setPoints(name, getPoints(name) + 1);
+
+    // Log speichern
+    const today = new Date().toISOString().split("T")[0];
+    const logKey = "log_" + today;
+    const currentLog = JSON.parse(localStorage.getItem(logKey) || "{}");
+    currentLog[name] = (currentLog[name] || 0) + 1;
+    localStorage.setItem(logKey, JSON.stringify(currentLog));
+
+    // Belohnung prüfen
+    const rewards = [
+      { punkte: 10, text: "Note 1 ✏️" },
+      { punkte: 20, text: "Hausaufgabenfrei-Gutschein 🏠" },
+      { punkte: 40, text: "Note 1 ✏️" },
+      { punkte: 60, text: "Süßigkeit vom Kiosk 🍬" },
+      { punkte: 80, text: "Hausaufgabenfrei-Gutschein 🏠" },
+      { punkte: 100, text: "Note 1 ✏️" },
+      { punkte: 150, text: "Snack deiner Wahl vom Kiosk 🥨" },
+    ];
+    const newPoints = getPoints(name);
+    const oldPoints = newPoints - 1;
+    const reached = rewards.find(r => oldPoints < r.punkte && newPoints >= r.punkte);
+    if (reached) {
+      const rewardKey = `reward_${name}_${reached.punkte}`;
+      if (!localStorage.getItem(rewardKey)) {
+        localStorage.setItem(rewardKey, new Date().toISOString());
+      }
+    }
+  });
+
+  fireBigConfetti();
+  
+  // 🆕 Popup-Text anzeigen
+  const popup = document.getElementById("big-reward-popup");
+  if (popup) {
+    popup.innerHTML = "🎉 <br><b>ALLE BEKOMMEN EINEN PUNKT!</b>";
+    popup.style.display = "block";
+    setTimeout(() => { popup.style.display = "none"; }, 4000);
+  }
+updateOverview();
+  updateRanking();
+}
+
+
+function fireBigConfetti() {
+  const duration = 2 * 1000;
+  const animationEnd = Date.now() + duration;
+  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+
+  function randomInRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  const interval = setInterval(function() {
+    const timeLeft = animationEnd - Date.now();
+
+    if (timeLeft <= 0) {
+      return clearInterval(interval);
+    }
+
+    const particleCount = 100;
+    confetti(Object.assign({}, defaults, {
+      particleCount,
+      origin: {
+        x: randomInRange(0.1, 0.9),
+        y: Math.random() - 0.2
+      }
+    }));
+  }, 200);
+}
+
+
+let studentPasswords = JSON.parse(localStorage.getItem("studentPasswords") || "{}");
+
+function enterAs(name) {
+  if (name === "Lehrer") {
+    document.getElementById("start-screen").style.display = "none";
+    document.getElementById("teacher-screen").style.display = "block";
+    return;
+  }
+
+  proceedToStudentView(name); // Direkt ohne Passwort
+}
+
+function proceedToStudentView(name) {
+  document.getElementById("start-screen").style.display = "none";
+  document.getElementById("student-screen").style.display = "block";
+  document.getElementById("student-name").textContent = name + "s Punktestand";
+
+  const points = getPoints(name);
+  document.getElementById("points-count").textContent = points;
+  const starDiv = document.getElementById("points-as-stars");
+  starDiv.innerHTML = "";
+  for (let i = 0; i < points; i++) {
+    starDiv.innerHTML += "<span class='wiggle-once'>★</span>";
+    if ((i + 1) % 10 === 0) starDiv.innerHTML += "<br>";
+  }
+  document.getElementById("student-stars").innerHTML = "";
+  updateRewardHint(name, points);
+}
+
+function updateRewardHint(name, points) {
+  const hint = document.getElementById("student-reward-hint");
+  hint.innerHTML = "";
+  const rewards = [
+    { punkte: 10, text: "Note 1 ✏️" },
+    { punkte: 20, text: "Hausaufgabenfrei-Gutschein 🏠" },
+    { punkte: 40, text: "Note 1 ✏️" },
+    { punkte: 60, text: "Süßigkeit vom Kiosk 🍬" },
+    { punkte: 80, text: "Hausaufgabenfrei-Gutschein 🏠" },
+    { punkte: 100, text: "Note 1 ✏️" },
+    { punkte: 150, text: "Snack deiner Wahl vom Kiosk 🥨" },
+  ];
+
+  const erreichte = rewards.filter(b => points >= b.punkte);
+  if (erreichte.length > 0) {
+    hint.innerHTML += "<h3>Bereits erreichte Belohnungen</h3><div style='display:flex; flex-direction:column; gap:10px; margin-bottom:20px;'>";
+    erreichte.forEach(b => {
+      const key = `reward_${name}_${b.punkte}`;
+      const rawDate = localStorage.getItem(key);
+      let formattedDate = "";
+      if (rawDate) {
+        const date = new Date(rawDate);
+        formattedDate = `erreicht am: ${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth()+1).padStart(2, '0')}`;
+      }
+      hint.innerHTML += `<div style="border: 3px dashed green; background: #f0fff0; padding: 10px 14px; border-radius: 12px; font-size: 18px;">🎁 <b>${b.punkte} Punkte:</b> ${b.text}<br><span style="font-size:14px; color:#333;">${formattedDate}</span></div>`;
+    });
+    hint.innerHTML += "</div>";
+  }
+
+  const next = rewards.find(b => points < b.punkte);
+  if (next) {
+    const needed = next.punkte - points;
+    let stars = "";
+    for (let j = 0; j < needed; j++) {
+      stars += `<span style='color:gray; font-size:60px;'>★</span>`;
+      if ((j + 1) % 10 === 0) stars += "<br>";
+    }
+    hint.innerHTML += `<h3>Nächstes Ziel</h3><div class="next-goal"><span style="color:red;">✗</span> ${next.punkte} Punkte: ${next.text}<br>${stars}</div><div style="font-size:20px; font-weight:bold;">Noch ${needed} Sterne bis zur nächsten Belohnung!</div>`;
+  }
+}
+
+
+
+
+
+
+function downloadPoints() {
+  let text = "";
+  students.forEach(name => {
+    const points = getPoints(name);
+    text += `${name}: ${points} Punkte
+`;
+  });
+  const blob = new Blob([text], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "punkte.txt";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+</script>
+</head>
+<body>
+<div id="name-popup"></div>
+<div id="big-reward-popup" style="display:none; font-size:50px; font-weight:bold; padding:20px; background:white; border-radius:20px; position:fixed; top:40%; left:50%; transform:translate(-50%,-50%); z-index:10000; box-shadow:0 0 20px rgba(0,0,0,0.3); text-align:center;"></div>
+<div id="start-screen">
+<div id="student-buttons" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;">
+<button class="button student-button" onclick="checkTeacherPassword()" style="background:#ffcc00; color:black;">Lehrer</button>
+</div>
+</div>
+<div id="teacher-screen" style="display:none">
+<div class="student-button-list" id="teacher-buttons"></div>
+<button class="button blue-button" onclick="startKlassenparty()" style=" transform: scale(1.1); font-size: 110%;">🎉 Klassenparty</button>
+<button class="button blue-button" onclick="goBack()" style=" transform: scale(1.1); font-size: 110%;">Zurück</button><button class="button blue-button" onclick="downloadPoints()" style="margin:10px; transform: scale(1.1); font-size: 110%;">📥</button><button class="button" onclick="resetPoints()" style="background:#c62828; color:white; margin:10px; transform: scale(1.1); font-size: 110%;">🔒 Zurücksetzen</button>
+<div>
+<button class="button blue-button" onclick="toggleOverview()" style=" transform: scale(1.1); font-size: 110%;">📊 Punkteübersicht</button>
+<button class="button blue-button" onclick="toggleRanking()" style=" transform: scale(1.1); font-size: 110%;">🏆 Ranking</button>
+<button class="button blue-button" onclick="toggleMehr()" style=" transform: scale(1.1); font-size: 110%;">⚙️ Mehr</button>
+<button class="button blue-button" onclick="toggleDailyView()" style=" transform: scale(1.1); font-size: 110%;">📅 Tagesansicht</button>
+<button class="button blue-button" onclick="toggleBelohnungstabelle()" style=" transform: scale(1.1); font-size: 110%;">🎁 erzielte Belohnungen</button>
+</div>
+<div id="points-overview-section" style="display:none">
+<h2>Punkteübersicht</h2>
+<ul id="points-overview" style="list-style:none;padding:0;"></ul>
+</div>
+<div id="ranking-section" style="display:none">
+<h2>Ranking</h2>
+<ul id="ranking-list" style="list-style:none;padding:0;"></ul>
+</div>
+<div id="manual-adjust-section" style="display:none">
+<h2>Punkte manuell anpassen</h2>
+<div id="manual-list"></div>
+</div>
+<div id="daily-view-section" style="display:none">
+<h2>Tagesansicht</h2>
+<div id="daily-table" style="overflow-x:auto;"></div>
+</div>
+<div id="belohnungstabelle-section" style="display:none; margin-top:40px;">
+<h2>🎁 Erzielte Belohnungen</h2>
+<div id="belohnungstabelle" style="overflow-x:auto;"></div>
+</div>
+<div style="display:flex; justify-content:flex-start; align-items:center; flex-wrap:wrap; gap:20px; margin-top:30px;">
+<div id="color-chooser-teacher" style="display:flex; gap:10px;">
+<button onclick="setBgColor('light')" style=" transform: scale(1.1); font-size: 110%;">🌤</button>
+<button onclick="setBgColor('dark')" style=" transform: scale(1.1); font-size: 110%;">🌙</button>
+<button onclick="setBgColor('green')" style=" transform: scale(1.1); font-size: 110%;">💚</button>
+<button onclick="setBgColor('blue')" style=" transform: scale(1.1); font-size: 110%;">🔵</button>
+</div>
+</div>
+</div>
+<div id="student-screen" style="display:none;">
+<h1 id="student-name">Punkte</h1>
+<div style="font-size:30px; margin-bottom:10px;">Insgesamt gesammelte Sterne: <span id="points-count"></span></div>
+<div id="points-as-stars" style="font-size: 60px; color: gold; margin-bottom: 20px;"></div>
+<div class="star-container" id="student-stars"></div>
+<div id="student-reward-hint" style="font-size:24px; margin-top:20px;"></div>
+<div style="display:flex; justify-content:flex-start; align-items:center; flex-wrap:wrap; gap:20px; margin-top:30px;">
+<div id="color-chooser-student" style="display:none !important;">
+<button onclick="setBgColor('light')">🌤</button>
+<button onclick="setBgColor('dark')">🌙</button>
+<button onclick="setBgColor('green')">💚</button>
+<button onclick="setBgColor('blue')">🔵</button>
+</div>
+<button class="button blue-button" onclick="goBack()">Zurück</button>
+</div>
+</div>
+
+<script>
+// === Backend-Anbindung ===
+const BACKEND = "https://token-backend-eric.fly.dev";
+let teacherKey = null;
+
+// Snapshot vom Server laden und localStorage spiegeln
+async function syncFromServer() {
+  try {
+    const res = await fetch(BACKEND + "/api/snapshot", { cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    // Punkte spiegeln
+    if (data.points) {
+      for (const [name, p] of Object.entries(data.points)) {
+        localStorage.setItem("points_" + name, Number(p) || 0);
+      }
+    }
+    // Logs spiegeln
+    if (data.logs) {
+      for (const [date, obj] of Object.entries(data.logs)) {
+        localStorage.setItem("log_" + date, JSON.stringify(obj));
+      }
+    }
+  } catch (e) {
+    console.warn("syncFromServer fehlgeschlagen:", e);
+  }
+}
+
+// Punkte auf Server schreiben (optional delta für Tageslog)
+async function serverSet(name, points, delta = 0) {
+  if (!teacherKey) return;
+  try {
+    await fetch(BACKEND + "/api/set", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: teacherKey, name, points, delta })
+    });
+  } catch (e) {
+    console.warn("serverSet fehlgeschlagen:", e);
+  }
+}
+
+// Server-Reset
+async function serverReset() {
+  if (!teacherKey) return;
+  try {
+    await fetch(BACKEND + "/api/reset", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ key: teacherKey })
+    });
+  } catch (e) {
+    console.warn("serverReset fehlgeschlagen:", e);
+  }
+}
+
+// Lehrerpasswort abfragen und in teacherKey speichern
+function checkTeacherPassword() {
+  const input = prompt("Lehrer-Passwort?");
+  if (!input) return;
+  teacherKey = input;
+  enterAs("Lehrer");
+}
+</script>
+<script>
+const students = ["Rafael Bachmann", "Tristan Brandl", "Annika Hanß", "Matteo Oskar Hornstein", "Ben Ilgner", "Mika Illgen", "Leon Jirapat Keiber", "Diana Kuhn", "Mia Marie Lehwald", "Philipp Leinweber", "Olivia Lendle", "Aaron Louis", "Gratiela-Anne-Marie Lungu", "Tashina Lisa Magic", "Malik Mahiroglu", "Amelie Hope Nilensky", "Amelie Andrea Preuß", "Anna Reinbothe", "Mika Rinnert", "Marleen Schillinger", "Nora Schrodin", "Caroline Schu", "Emilio Felipe Stark", "Ivo Nicola Veith", "Mia Sophie Walther", "Fred Fritz Weick", "Colin Wenger", "Niklas Paul Wüst"];
+
+const rewards = [
+  { punkte: 10, text: "Note 1 ✏️" },
+  { punkte: 20, text: "Hausaufgabenfrei-Gutschein 🏠" },
+  { punkte: 40, text: "Note 1 ✏️" },
+  { punkte: 60, text: "Süßigkeit vom Kiosk 🍬" },
+  { punkte: 80, text: "Hausaufgabenfrei-Gutschein 🏠" },
+  { punkte: 100, text: "Note 1 ✏️" },
+  { punkte: 150, text: "Snack deiner Wahl vom Kiosk 🥨" },
+];
+
+
+function setupButtons() {
+  const studentDiv = document.getElementById("student-buttons");
+  const teacherDiv = document.getElementById("teacher-buttons");
+  students.forEach(name => {
+    const btn = document.createElement("button");
+    btn.className = "button student-button";
+    btn.textContent = name + " 🎓";
+    btn.onclick = () => enterAs(name);
+    studentDiv.appendChild(btn);
+
+    const tbtn = document.createElement("button");
+    tbtn.className = "button student-button";
+    tbtn.textContent = "🎓 " + name;
+    tbtn.onclick = () => addPoint(name, tbtn);
+    teacherDiv.appendChild(tbtn);
+  });
+}
+
+function enterAs(role) {
+  document.getElementById("start-screen").style.display = "none";
+  if (role === "Lehrer") {
+    document.getElementById("teacher-screen").style.display = "block";
+  } else {
+    document.getElementById("student-screen").style.display = "block";
+    document.getElementById("student-name").textContent = `${role}s Punktestand`;
+
+    const points = getPoints(role);
+    document.getElementById("points-count").textContent = points;
+    const starDiv = document.getElementById("points-as-stars");
+    starDiv.innerHTML = "";
+    for (let i = 0; i < points; i++) {
+      starDiv.innerHTML += "<span class='wiggle-once'>★</span>";
+      if ((i + 1) % 10 === 0) starDiv.innerHTML += "<br>";
+    }
+
+    const rewards = [
+      { punkte: 10, text: "Note 1 ✏️" },
+      { punkte: 20, text: "Hausaufgabenfrei-Gutschein 🏠" },
+      { punkte: 40, text: "Note 1 ✏️" },
+      { punkte: 60, text: "Süßigkeit vom Kiosk 🍬" },
+      { punkte: 80, text: "Hausaufgabenfrei-Gutschein 🏠" },
+      { punkte: 100, text: "Note 1 ✏️" },
+      { punkte: 150, text: "Snack deiner Wahl vom Kiosk 🥨" },
+    ];
+
+    const hint = document.getElementById("student-reward-hint");
+    hint.innerHTML = "";
+
+    // Erreichte Belohnungen als schmale Gutscheine
+    const name = role;
+    const erreichte = rewards.filter(b => points >= b.punkte);
+    if (erreichte.length > 0) {
+      hint.innerHTML += "<h3>Bereits erreichte Belohnungen</h3><div style='display:flex; flex-direction:column; gap:10px; margin-bottom:20px;'>";
+      erreichte.forEach(b => {
+        const key = `reward_${name}_${b.punkte}`;
+        const rawDate = localStorage.getItem(key);
+        let formattedDate = "";
+        if (rawDate) {
+          const date = new Date(rawDate);
+          formattedDate = `erreicht am: ${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth()+1).padStart(2, '0')}`;
+        }
+        hint.innerHTML += `
+          <div style="
+            border: 3px dashed green;
+            background: #f0fff0;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 18px;
+            max-width: 500px;
+            box-shadow: 1px 1px 4px rgba(0,0,0,0.1);
+          ">
+            🎁 <b>${b.punkte} Punkte:</b> ${b.text}<br><span style="font-size:14px; color:#333;">${formattedDate}</span>
+          </div>`;
+      });
+      hint.innerHTML += "</div>";
+    }
+
+    // Nächstes Ziel danach
+    let previous = 0;
+    for (let i = 0; i < rewards.length; i++) {
+      const b = rewards[i];
+      if (points < b.punkte) {
+        const needed = b.punkte - points;
+let stars = "";
+for (let j = 0; j < needed; j++) {
+  stars += `<span style='color:gray; font-size:60px;'>★</span>`;
+  if ((j + 1) % 10 === 0) stars += "<br style='line-height: 0.2;'>";
+}
+        hint.innerHTML += "<h3>Nächstes Ziel</h3>";
+hint.innerHTML += `<div class="next-goal" style="margin-bottom:10px; line-height:1.2;"><span style="color:red;">✗</span> ${b.punkte} Punkte: ${b.text}<br>${stars}</div>`;
+        hint.innerHTML += `<div style="font-size:20px; font-weight:bold; margin: 10px 0;">Noch ${needed} Sterne bis zur nächsten Belohnung!</div>`;
+        break;
+      }
+      previous = b.punkte;
+    }
+
+    document.getElementById("student-stars").innerHTML = "";
+  }
+}
+
+function checkTeacherPassword() {
+  const input = prompt("Passwort?");
+  if (input === "abc") { teacherKey = "abc"; enterAs("Lehrer"); }
+}
+
+function getPoints(name) {
+  return parseInt(localStorage.getItem("points_" + name)) || 0;
+}
+
+function setPoints(name, points) {
+  localStorage.setItem("points_" + name, points);
+  serverSet(name, points, 0);
+}
+
+
+
+function showName(name) {
+  const popup = document.getElementById("name-popup");
+  popup.innerHTML = name + '<br>hat ' + getPoints(name) + ' Punkte';
+  popup.style.display = "block";
+  setTimeout(() => { popup.style.display = "none"; }, 2000);
+}
+
+function goBack() {
+  document.getElementById("student-name").textContent = "";
+  document.getElementById("points-count").textContent = "";
+  document.getElementById("points-as-stars").innerHTML = "";
+  document.getElementById("student-stars").innerHTML = "";
+  document.getElementById("student-reward-hint").innerHTML = "";
+
+  document.getElementById("teacher-screen").style.display = "none";
+  document.getElementById("student-screen").style.display = "none";
+  document.getElementById("start-screen").style.display = "block";
+}
+
+// setupButtons(); (wird nach Sync gestartet)
+
+function toggleOverview() {
+  const el = document.getElementById('points-overview-section');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  if (el.style.display === 'block') updateOverview();
+}
+
+
+
+function toggleMehr() {
+  if (prompt("Passwort?") === "abc") {
+    const el = document.getElementById('manual-adjust-section');
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    if (el.style.display === 'block') updateManualAdjustList();
+  }
+}
+
+
+function toggleDailyView() {
+  const section = document.getElementById('daily-view-section');
+  section.style.display = section.style.display === 'none' ? 'block' : 'none';
+  if (section.style.display === 'block') {
+    const table = document.getElementById('daily-table');
+    const logs = Object.keys(localStorage).filter(k => k.startsWith('log_')).sort().reverse();
+    let html = '<table border="1" style="margin:auto;"><thead><tr><th>Datum</th>';
+    students.forEach(n => html += `<th>${n}</th>`);
+    html += '<th>Summe</th></tr></thead><tbody>';
+    logs.forEach(k => {
+      const log = JSON.parse(localStorage.getItem(k));
+      const date = k.replace('log_','');
+      let row = `<tr><td>${date}</td>`;
+      let sum = 0;
+      students.forEach(n => {
+        const p = log[n] || 0;
+        sum += p;
+        row += `<td>${p}</td>`;
+      });
+      row += `<td><b>${sum}</b></td></tr>`;
+      html += row;
+    });
+    html += '</tbody></table>';
+    table.innerHTML = html;
+  }
+}
+
+
+function toggleRanking() {
+  const el = document.getElementById('ranking-section');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  if (el.style.display === 'block') updateRanking();
+}
+
+
+function updateOverview() {
+  const ul = document.getElementById('points-overview');
+  ul.innerHTML = '';
+  students.forEach(n => {
+    const li = document.createElement('li');
+    li.textContent = `${n} (${getPoints(n)} Punkte)`;
+    ul.appendChild(li);
+  });
+}
+
+function updateRanking() {
+  const ul = document.getElementById('ranking-list');
+  ul.innerHTML = '';
+  [...students].sort((a,b) => getPoints(b)-getPoints(a)).forEach((n,i) => {
+    const li = document.createElement('li');
+    li.textContent = `${i+1}. ${n} (${getPoints(n)} Punkte)`;
+    ul.appendChild(li);
+  });
+}
+
+function checkMehrPassword() {
+  if (prompt("Passwort?") === "abc") {
+    document.getElementById('manual-adjust-section').style.display = 'block';
+    updateManualAdjustList();
+  }
+}
+
+function updateManualAdjustList() {
+  const container = document.getElementById('manual-list');
+  container.innerHTML = '';
+  students.forEach(name => {
+    const row = document.createElement('div');
+    row.style.display = 'flex';
+    row.style.justifyContent = 'center';
+    row.style.alignItems = 'center';
+    row.style.gap = '10px';
+    row.innerHTML = `
+      ${name}
+      <input type="number" id="input-${name}" class="flat-input" value="0">
+      <button class="button flat-button" onclick="applyChange('${name}')">anwenden</button>
+    `;
+    container.appendChild(row);
+  });
+}
+
+function applyChange(name) {
+  const input = document.getElementById('input-' + name);
+  const val = parseInt(input.value);
+  if (!isNaN(val)) {
+    const oldPoints = getPoints(name);
+    const newPoints = oldPoints + val;
+
+    // Belohnung prüfen
+    const rewards = [
+      { punkte: 10, text: "Note 1 ✏️" },
+      { punkte: 20, text: "Hausaufgabenfrei-Gutschein 🏠" },
+      { punkte: 40, text: "Note 1 ✏️" },
+      { punkte: 60, text: "Süßigkeit vom Kiosk 🍬" },
+      { punkte: 80, text: "Hausaufgabenfrei-Gutschein 🏠" },
+      { punkte: 100, text: "Note 1 ✏️" },
+      { punkte: 150, text: "Snack deiner Wahl vom Kiosk 🥨" },
+    ];
+    rewards.forEach(r => {
+      if (oldPoints < r.punkte && newPoints >= r.punkte) {
+        const rewardKey = `reward_${name}_${r.punkte}`;
+        if (!localStorage.getItem(rewardKey)) {
+          localStorage.setItem(rewardKey, new Date().toISOString());
+        }
+      }
+    });
+
+    setPoints(name, newPoints);
+    updateOverview();
+    updateRanking();
+  }
+}
+
+function showDailyView() {
+  const section = document.getElementById('daily-view-section');
+  section.style.display = 'block';
+  const table = document.getElementById('daily-table');
+  const logs = Object.keys(localStorage).filter(k => k.startsWith('log_')).sort().reverse();
+  let html = '<table border="1" style="margin:auto;"><thead><tr><th>Datum</th>';
+  students.forEach(n => html += `<th>${n}</th>`);
+  html += '<th>Summe</th></tr></thead><tbody>';
+  logs.forEach(k => {
+    const log = JSON.parse(localStorage.getItem(k));
+    const date = k.replace('log_','');
+    let row = `<tr><td>${date}</td>`;
+    let sum = 0;
+    students.forEach(n => {
+      const p = log[n] || 0;
+      sum += p;
+      row += `<td>${p}</td>`;
+    });
+    row += `<td><b>${sum}</b></td></tr>`;
+    html += row;
+  });
+  html += '</tbody></table>';
+  table.innerHTML = html;
+}
+
+async function resetPoints() {
+  if (prompt("Passwort?") === teacherKey) {
+    students.forEach(n => localStorage.removeItem("points_" + n));
+    Object.keys(localStorage).forEach(k => { if (k.startsWith("log_")) localStorage.removeItem(k); });
+    await serverReset();
+    updateOverview();
+    updateRanking();
+    alert("Zurückgesetzt.");
+  }
+}
+
+
+function addPoint(name, button) {
+  button.disabled = true;
+  setTimeout(() => { button.disabled = false; }, 3000);
+  setPoints(name, getPoints(name) + 1);
+  // Log speichern
+  const today = new Date().toISOString().split("T")[0];
+  const logKey = "log_" + today;
+  const currentLog = JSON.parse(localStorage.getItem(logKey) || "{}");
+  currentLog[name] = (currentLog[name] || 0) + 1;
+  localStorage.setItem(logKey, JSON.stringify(currentLog));
+
+  
+  // Belohnung prüfen
+  const rewards = [
+    { punkte: 10, text: "Note 1 ✏️" },
+    { punkte: 20, text: "Hausaufgabenfrei-Gutschein 🏠" },
+    { punkte: 40, text: "Note 1 ✏️" },
+    { punkte: 60, text: "Süßigkeit vom Kiosk 🍬" },
+    { punkte: 80, text: "Hausaufgabenfrei-Gutschein 🏠" },
+    { punkte: 100, text: "Note 1 ✏️" },
+    { punkte: 150, text: "Snack deiner Wahl vom Kiosk 🥨" },
+  ];
+  const newPoints = getPoints(name);
+  const oldPoints = newPoints - 1;
+  const reached = rewards.find(r => oldPoints < r.punkte && newPoints >= r.punkte);
+  if (reached) {
+    const rewardKey = `reward_${name}_${reached.punkte}`;
+    if (!localStorage.getItem(rewardKey)) {
+      localStorage.setItem(rewardKey, new Date().toISOString());
+    }
+    showBigReward(reached.punkte, reached.text);
+  }
+
+  fireConfetti();
+  showName(name);
+  
+  serverSet(name, getPoints(name), 1);
+  updateOverview();
+  updateRanking();
+}
+
+
+
+function fireConfetti(count = 80) {
+  confetti({
+    particleCount: count,
+    particleCount: 80,
+    spread: 60,
+    origin: { y: 0.6 }
+  });
+}
+
+
+function showBigReward(punkte, text) {
+  const div = document.getElementById('big-reward-popup');
+  div.innerHTML = `🎁 <br><b>${punkte} Punkte:</b><br>${text}`;
+  div.style.display = 'block';
+  fireConfetti();
+  setTimeout(() => { div.style.display = 'none'; }, 5000);
+}
+
+function toggleBelohnungstabelle() {
+  const section = document.getElementById('belohnungstabelle-section');
+  section.style.display = section.style.display === 'none' ? 'block' : 'none';
+  if (section.style.display === 'block') {
+    const rewards = [
+      { punkte: 10, text: "Note 1 ✏️" },
+      { punkte: 20, text: "Hausaufgabenfrei-Gutschein 🏠" },
+      { punkte: 40, text: "Note 1 ✏️" },
+      { punkte: 60, text: "Süßigkeit vom Kiosk 🍬" },
+      { punkte: 80, text: "Hausaufgabenfrei-Gutschein 🏠" },
+      { punkte: 100, text: "Note 1 ✏️" },
+      { punkte: 150, text: "Snack deiner Wahl vom Kiosk 🥨" },
+    ];
+    let html = '<table border="1" style="margin:auto; border-collapse:collapse;"><thead><tr><th>Schüler/in</th>';
+    rewards.forEach(b => {
+      html += `<th>${b.punkte}<br>${b.text}</th>`;
+    });
+    html += '</tr></thead><tbody>';
+    students.forEach(name => {
+      const p = getPoints(name);
+      html += `<tr><td style="padding:6px 10px;"><b>${name}</b></td>`;
+      rewards.forEach(b => {
+        html += `<td style="padding:6px 10px; text-align:center;">${p >= b.punkte ? "✅" : "✗"}</td>`;
+      });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('belohnungstabelle').innerHTML = html;
+  }
+}
+
+
+// Hintergrundfarbe setzen und speichern
+function setBgColor(color) {
+  const body = document.body;
+  body.classList.remove("bg-light", "bg-dark", "bg-green", "bg-blue");
+  body.classList.add("bg-" + color);
+  localStorage.setItem("bgColor", color);
+}
+
+// Beim Laden gespeicherte Farbe setzen
+window.addEventListener("DOMContentLoaded", async () => {
+  const color = localStorage.getItem("bgColor") || "light";
+  setBgColor(color);
+  await syncFromServer();
+  setupButtons();
+});
+function startKlassenparty() {
+  students.forEach(name => {
+    setPoints(name, getPoints(name) + 1);
+
+    // Log speichern
+    const today = new Date().toISOString().split("T")[0];
+    const logKey = "log_" + today;
+    const currentLog = JSON.parse(localStorage.getItem(logKey) || "{}");
+    currentLog[name] = (currentLog[name] || 0) + 1;
+    localStorage.setItem(logKey, JSON.stringify(currentLog));
+
+    // Belohnung prüfen
+    const rewards = [
+      { punkte: 10, text: "Note 1 ✏️" },
+      { punkte: 20, text: "Hausaufgabenfrei-Gutschein 🏠" },
+      { punkte: 40, text: "Note 1 ✏️" },
+      { punkte: 60, text: "Süßigkeit vom Kiosk 🍬" },
+      { punkte: 80, text: "Hausaufgabenfrei-Gutschein 🏠" },
+      { punkte: 100, text: "Note 1 ✏️" },
+      { punkte: 150, text: "Snack deiner Wahl vom Kiosk 🥨" },
+    ];
+    const newPoints = getPoints(name);
+    const oldPoints = newPoints - 1;
+    const reached = rewards.find(r => oldPoints < r.punkte && newPoints >= r.punkte);
+    if (reached) {
+      const rewardKey = `reward_${name}_${reached.punkte}`;
+      if (!localStorage.getItem(rewardKey)) {
+        localStorage.setItem(rewardKey, new Date().toISOString());
+      }
+    }
+  });
+
+  fireBigConfetti();
+  
+  // 🆕 Popup-Text anzeigen
+  const popup = document.getElementById("big-reward-popup");
+  if (popup) {
+    popup.innerHTML = "🎉 <br><b>ALLE BEKOMMEN EINEN PUNKT!</b>";
+    popup.style.display = "block";
+    setTimeout(() => { popup.style.display = "none"; }, 4000);
+  }
+updateOverview();
+  updateRanking();
+}
+
+
+function fireBigConfetti() {
+  const duration = 2 * 1000;
+  const animationEnd = Date.now() + duration;
+  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+
+  function randomInRange(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
+  const interval = setInterval(function() {
+    const timeLeft = animationEnd - Date.now();
+
+    if (timeLeft <= 0) {
+      return clearInterval(interval);
+    }
+
+    const particleCount = 100;
+    confetti(Object.assign({}, defaults, {
+      particleCount,
+      origin: {
+        x: randomInRange(0.1, 0.9),
+        y: Math.random() - 0.2
+      }
+    }));
+  }, 200);
+}
+
+
+let studentPasswords = JSON.parse(localStorage.getItem("studentPasswords") || "{}");
+
+function enterAs(name) {
+  if (name === "Lehrer") {
+    document.getElementById("start-screen").style.display = "none";
+    document.getElementById("teacher-screen").style.display = "block";
+    return;
+  }
+
+  proceedToStudentView(name); // Direkt ohne Passwort
+}
+
+function proceedToStudentView(name) {
+  document.getElementById("start-screen").style.display = "none";
+  document.getElementById("student-screen").style.display = "block";
+  document.getElementById("student-name").textContent = name + "s Punktestand";
+
+  const points = getPoints(name);
+  document.getElementById("points-count").textContent = points;
+  const starDiv = document.getElementById("points-as-stars");
+  starDiv.innerHTML = "";
+  for (let i = 0; i < points; i++) {
+    starDiv.innerHTML += "<span class='wiggle-once'>★</span>";
+    if ((i + 1) % 10 === 0) starDiv.innerHTML += "<br>";
+  }
+  document.getElementById("student-stars").innerHTML = "";
+  updateRewardHint(name, points);
+}
+
+function updateRewardHint(name, points) {
+  const hint = document.getElementById("student-reward-hint");
+  hint.innerHTML = "";
+  const rewards = [
+    { punkte: 10, text: "Note 1 ✏️" },
+    { punkte: 20, text: "Hausaufgabenfrei-Gutschein 🏠" },
+    { punkte: 40, text: "Note 1 ✏️" },
+    { punkte: 60, text: "Süßigkeit vom Kiosk 🍬" },
+    { punkte: 80, text: "Hausaufgabenfrei-Gutschein 🏠" },
+    { punkte: 100, text: "Note 1 ✏️" },
+    { punkte: 150, text: "Snack deiner Wahl vom Kiosk 🥨" },
+  ];
+
+  const erreichte = rewards.filter(b => points >= b.punkte);
+  if (erreichte.length > 0) {
+    hint.innerHTML += "<h3>Bereits erreichte Belohnungen</h3><div style='display:flex; flex-direction:column; gap:10px; margin-bottom:20px;'>";
+    erreichte.forEach(b => {
+      const key = `reward_${name}_${b.punkte}`;
+      const rawDate = localStorage.getItem(key);
+      let formattedDate = "";
+      if (rawDate) {
+        const date = new Date(rawDate);
+        formattedDate = `erreicht am: ${String(date.getDate()).padStart(2, '0')}.${String(date.getMonth()+1).padStart(2, '0')}`;
+      }
+      hint.innerHTML += `<div style="border: 3px dashed green; background: #f0fff0; padding: 10px 14px; border-radius: 12px; font-size: 18px;">🎁 <b>${b.punkte} Punkte:</b> ${b.text}<br><span style="font-size:14px; color:#333;">${formattedDate}</span></div>`;
+    });
+    hint.innerHTML += "</div>";
+  }
+
+  const next = rewards.find(b => points < b.punkte);
+  if (next) {
+    const needed = next.punkte - points;
+    let stars = "";
+    for (let j = 0; j < needed; j++) {
+      stars += `<span style='color:gray; font-size:60px;'>★</span>`;
+      if ((j + 1) % 10 === 0) stars += "<br>";
+    }
+    hint.innerHTML += `<h3>Nächstes Ziel</h3><div class="next-goal"><span style="color:red;">✗</span> ${next.punkte} Punkte: ${next.text}<br>${stars}</div><div style="font-size:20px; font-weight:bold;">Noch ${needed} Sterne bis zur nächsten Belohnung!</div>`;
+  }
+}
+
+
+
+
+
+
+function downloadPoints() {
+  let text = "";
+  students.forEach(name => {
+    const points = getPoints(name);
+    text += `${name}: ${points} Punkte
+`;
+  });
+  const blob = new Blob([text], { type: "text/plain" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "punkte.txt";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+</script>
+
+<!-- Masked Password Modal -->
+<div id="password-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:10001; align-items:center; justify-content:center;">
+  <div style="background:#fff; padding:24px; border-radius:14px; width: min(90vw, 380px); box-shadow:0 10px 30px rgba(0,0,0,0.25); text-align:center;">
+    <div style="font-size:20px; font-weight:700; margin-bottom:12px;">Passwort eingeben</div>
+    <input id="pw-input" type="password" placeholder="•••" style="width:100%; padding:12px 14px; font-size:18px; border:1px solid #ccc; border-radius:10px; outline:none; margin-bottom:14px;">
+    <div style="display:flex; gap:10px; justify-content:center;">
+      <button id="pw-ok" class="button blue-button" style="flex:1;">OK</button>
+      <button id="pw-cancel" class="button" style="flex:1; background:#e0e0e0; color:#000;">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ===== Masked password flow (overrides) =====
+(function() {
+  const CORRECT_PW = "abc";
+  // Ensure global teacherKey exists
+  if (typeof window.teacherKey === "undefined") window.teacherKey = null;
+
+  function askPassword(callback) {
+    const modal = document.getElementById('password-modal');
+    const input = document.getElementById('pw-input');
+    const okBtn = document.getElementById('pw-ok');
+    const cancelBtn = document.getElementById('pw-cancel');
+
+    if (!modal || !input || !okBtn || !cancelBtn) {
+      const fallback = prompt("Passwort?");
+      callback && callback(fallback || "");
+      return;
+    }
+
+    function cleanup() {
+      modal.style.display = 'none';
+      okBtn.removeEventListener('click', onOk);
+      cancelBtn.removeEventListener('click', onCancel);
+      input.removeEventListener('keydown', onKey);
+    }
+    function onOk() {
+      const val = input.value || "";
+      cleanup();
+      callback && callback(val);
+    }
+    function onCancel() {
+      cleanup();
+    }
+    function onKey(e) {
+      if (e.key === 'Enter') onOk();
+      if (e.key === 'Escape') onCancel();
+    }
+
+    input.value = "";
+    modal.style.display = 'flex';
+    setTimeout(() => input.focus(), 0);
+
+    okBtn.addEventListener('click', onOk);
+    cancelBtn.addEventListener('click', onCancel);
+    input.addEventListener('keydown', onKey);
+  }
+
+  // Override: Lehrer-Login
+  window.checkTeacherPassword = function() {
+    askPassword(function(val) {
+      if (val === CORRECT_PW) {
+        window.teacherKey = CORRECT_PW;
+        if (typeof enterAs === 'function') enterAs("Lehrer");
+      } else {
+        alert("Falsches Passwort");
+      }
+    });
+  };
+
+  // Override: "Mehr" Bereich
+  if (typeof window.toggleMehr === 'function') {
+    const originalUpdate = window.updateManualAdjustList || function(){};
+    window.toggleMehr = function() {
+      askPassword(function(val) {
+        if (val === CORRECT_PW) {
+          const el = document.getElementById('manual-adjust-section');
+          el.style.display = el.style.display === 'none' ? 'block' : 'none';
+          if (el.style.display === 'block') originalUpdate();
+        } else {
+          alert("Falsches Passwort");
+        }
+      });
+    };
+  }
+
+  // Override: separater Check (falls verwendet)
+  window.checkMehrPassword = function() {
+    askPassword(function(val) {
+      if (val === CORRECT_PW) {
+        document.getElementById('manual-adjust-section').style.display = 'block';
+        if (typeof updateManualAdjustList === 'function') updateManualAdjustList();
+      } else {
+        alert("Falsches Passwort");
+      }
+    });
+  };
+
+  // Override: Zurücksetzen
+  if (typeof window.resetPoints === 'function') {
+    const _resetPoints = window.resetPoints;
+    window.resetPoints = async function() {
+      askPassword(async function(val) {
+        if (val === (window.teacherKey || CORRECT_PW)) {
+          // Original Logik ausführen
+          // Re-implement here to avoid calling prompt again
+          const students = window.students || [];
+          students.forEach(n => localStorage.removeItem("points_" + n));
+          Object.keys(localStorage).forEach(k => { if (k.startsWith("log_")) localStorage.removeItem(k); });
+          if (typeof serverReset === 'function') await serverReset();
+          if (typeof updateOverview === 'function') updateOverview();
+          if (typeof updateRanking === 'function') updateRanking();
+          alert("Zurückgesetzt.");
+        } else {
+          alert("Falsches Passwort");
+        }
+      });
+    };
+  }
+})();
+</script>
+
+</body>
+</html>
